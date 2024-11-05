@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>La Ansiedad - Voces Internas</title>
+    <style>
+        :root {
+            --pink-light: #FFE4E1;
+            --pink-medium: #FFB6C1;
+            --pink-dark: #FF69B4;
+            --pink-pastel: #FFD1DC;
+            --blue-pastel: #AEC6CF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--pink-light), var(--pink-medium));
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--pink-pastel);
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 15px;
+            padding: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: max-content;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .nav-item:hover .dropdown {
+            display: block;
+            opacity: 1;
+            animation: dropdownAppear 0.3s ease forwards;
+        }
+
+        @keyframes dropdownAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .dropdown li {
+            list-style: none;
+            margin: 0.5rem 0;
+            white-space: nowrap;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 0.5rem 1.5rem !important;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dropdown a:hover {
+            background-color: var(--pink-pastel) !important;
+            transform: translateX(5px);
+        }
+
+        .nav-links .has-dropdown::after {
+            content: '▾';
+            display: inline-block;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links .has-dropdown:hover::after {
+            transform: rotate(180deg);
+        }
+
+        /* Título imagen */
+        .title-image-container {
+            width: 100%;
+            height: 450px;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--pink-medium), var(--pink-dark));
+            padding: 2rem;
+        }
+
+        .title-image {
+            height: 100%;
+            width: auto;
+            max-width: 90%;
+            object-fit: contain;
+            animation: fadeInScale 1.2s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Contenido */
+        .content-container {
+            max-width: 1200px;
+            margin: 2rem auto 0;
+            padding: 2rem;
+        }
+
+        .disclaimer {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--pink-dark);
+            animation: slideIn 1s ease;
+        }
+
+        .info-section {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: fadeUp 1s ease forwards;
+        }
+
+        .info-section-content {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .info-text {
+            flex: 1;
+        }
+
+        .info-image {
+            flex: 1;
+            position: relative;
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+            aspect-ratio: 4/3;
+            max-width: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--pink-medium), var(--pink-dark));
+            padding: 2rem;
+        }
+
+        .info-image:hover {
+            transform: scale(1.02);
+        }
+
+        .info-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .info-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .info-section h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--pink-dark);
+            animation: lineGrow 1s ease forwards 1s;
+        }
+
+        @keyframes lineGrow {
+            to { width: 100%; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .resource-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .help-box {
+            background-color: var(--pink-light);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .help-box ul {
+            margin-left: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .help-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .social-links a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .social-links a:hover {
+            background-color: var(--blue-pastel);
+        }
+
+        @media (max-width: 768px) {
+            .title-image-container {
+                height: 300px;
+            }
+
+            .content-container {
+                padding: 1rem;
+            }
+
+            .info-section {
+                padding: 1.5rem;
+            }
+
+            .info-section-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .info-image {
+                width: 100%;
+                max-width: 400px;
+                margin-top: 1rem;
+            }
+
+            .info-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+
+
+        .video-section {
+    background-color: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    animation: fadeUp 1s ease forwards;
+}
+
+.video-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.video-preview {
+    flex: 1;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    max-width: 500px;
+}
+
+.video-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Cambiado de cover a contain */
+    transition: transform 0.5s ease;
+}
+
+.video-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.video-text {
+    font-size: 1.2rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+.youtube-button {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--pink-medium), var(--pink-dark));    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.youtube-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.youtube-icon {
+    width: 30px;
+    height: 30px;
+    background: #FF0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.youtube-icon::before {
+    content: '';
+    border-style: solid;
+    border-width: 8px 0 8px 12px;
+    border-color: transparent transparent transparent white;
+    position: relative;
+    left: 2px;
+}
+
+@media (max-width: 768px) {
+    .video-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .video-preview {
+        width: 100%;
+    }
+
+    .video-info {
+        align-items: center;
+        text-align: center;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li class="nav-item">
+                <a href="#videos" class="has-dropdown">Videos</a>
+                <ul class="dropdown">
+                    <li><a href="depresion.html">Depresión</a></li>
+                    <li><a href="ansiedad.html">Ansiedad</a></li>
+                    <li><a href="anorexia.html">Anorexia Nerviosa</a></li>
+                </ul>
+            </li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <div class="title-image-container">
+        <img src="logo.png" alt="Título Ansiedad" class="title-image">
+    </div>
+
+    <div class="content-container">
+        <div class="disclaimer">
+            <p><strong>Aviso importante:</strong> Esta página contiene información general y opiniones personales sobre la ansiedad. No constituye consejo médico profesional. Si crees que puedes estar experimentando ansiedad, por favor consulta con un profesional de la salud mental calificado.</p>
+        </div>
+
+        <section class="info-section">
+            <h2>¿Qué es la Ansiedad?</h2>
+            <div class="info-section-content">
+                <div class="info-text">
+                    <p>La ansiedad es una respuesta natural del cuerpo ante situaciones de estrés o peligro. Sin embargo, cuando esta respuesta se vuelve excesiva o persistente, puede convertirse en un trastorno que afecta significativamente la vida diaria.</p>
+                    <p>Es importante entender que la ansiedad puede manifestarse de diferentes formas y que cada persona la experimenta de manera única. Los síntomas pueden variar en intensidad y frecuencia, afectando tanto el bienestar físico como emocional.</p>
+                </div>
+                <div class="info-image">
+                    <img src="ansiedad.png" alt="Representación de la ansiedad">
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Señales Comunes</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3>Síntomas Físicos</h3>
+                    <p>Palpitaciones, sudoración, temblores, tensión muscular, dificultad para respirar</p>
+                </div>
+                <div class="resource-card">
+                    <h3>Síntomas Mentales</h3>
+                    <p>Preocupación excesiva, dificultad para concentrarse, pensamientos intrusivos</p>
+                </div>
+                <div class="resource-card">
+                    <h3>Impacto Social</h3>
+                    <p>Aislamiento, dificultad en relaciones, evitación de situaciones sociales</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-section">
+            <h2>Buscando Ayuda</h2>
+            <div class="help-box">
+                <p>Si estás experimentando síntomas de ansiedad, es importante que sepas que hay ayuda disponible. Un profesional de la salud mental puede ayudarte a desarrollar estrategias efectivas para manejar la ansiedad.</p>
+                <p>Un especialista puede ayudarte con:</p>
+                <ul>
+                    <li>Técnicas de respiración y relajación</li>
+                    <li>Terapia cognitivo-conductual</li>
+                    <li>Estrategias de afrontamiento personalizadas</li>
+                    <li>Manejo del estrés y la preocupación</li>
+                    <li>Desarrollo de habilidades de mindfulness</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    <section class="video-section">
+        <h2>Video Informativo</h2>
+        <div class="video-container">
+            <div class="video-preview">
+                <img src="luna.png" alt="Preview del video sobre ansiedad">
+            </div>
+            <div class="video-info">
+                <p class="video-text">Descubre en este video información detallada sobre la ansiedad, cómo identificar sus síntomas y estrategias efectivas para manejarla. Aprende más sobre esta condición común pero importante.</p>
+                <a href="https://www.youtube.com/watch?v=xKICotDbGZo" class="youtube-button ansiedad" target="_blank">
+                    <div class="youtube-icon"></div>
+                    <span>Ver Video</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>© 2024 Voces Internas - Todos los derechos reservados</p>
+        <div class="social-links">
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
+</body>
+</html>

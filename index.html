@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Voces Internas</title>
+    <style>
+        :root {
+            --pink-pastel: #FFD1DC;
+            --blue-pastel: #AEC6CF;
+            --yellow-pastel: #FFFACD;
+            --youtube-red: #FF0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--pink-pastel), var(--blue-pastel));
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--pink-pastel);
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 15px;
+            padding: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: max-content;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .nav-item:hover .dropdown {
+            display: block;
+            opacity: 1;
+            animation: dropdownAppear 0.3s ease forwards;
+        }
+
+        @keyframes dropdownAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .dropdown li {
+            list-style: none;
+            margin: 0.5rem 0;
+            white-space: nowrap;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 0.5rem 1.5rem !important;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dropdown a:hover {
+            background-color: var(--pink-pastel) !important;
+            transform: translateX(5px);
+        }
+
+        .nav-links .has-dropdown::after {
+            content: '▾';
+            display: inline-block;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-links .has-dropdown:hover::after {
+            transform: rotate(180deg);
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 4rem;
+            margin: 5rem 0 3rem;
+            color: #333;
+            text-shadow: 3px 3px var(--yellow-pastel);
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .welcome-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(50px);
+            animation: slideUp 1.5s ease forwards 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .video-container {
+            width: 100%;
+            height: 750px;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .condition-cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .condition-card {
+            background: white;
+            border-radius: 20px;
+            width: 300px;
+            height: 350px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .condition-card:nth-child(1) { animation-delay: 0.3s; }
+        .condition-card:nth-child(2) { animation-delay: 0.6s; }
+        .condition-card:nth-child(3) { animation-delay: 0.9s; }
+
+        .condition-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 1rem;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: transform 0.5s ease;
+            margin-bottom: 1rem;
+        }
+
+        .condition-card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-top: auto;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .social-links a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .social-links a:hover {
+            background-color: var(--blue-pastel);
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+                margin-top: 4rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.1rem;
+                padding: 1.5rem;
+            }
+
+            .video-container {
+                height: 300px;
+            }
+
+            .condition-card {
+                width: 90%;
+                height: auto;
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="voces_internas.html">Inicio</a></li>
+            <li class="nav-item">
+                <a href="#videos" class="has-dropdown">Videos</a>
+                <ul class="dropdown">
+                    <li><a href="https://www.youtube.com/watch?v=RGbISO7F-fs">Depresión</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=xKICotDbGZo">Ansiedad</a></li>
+                    <li><a href="https://www.youtube.com/watch?v=nmGJ2XStbuU">Anorexia Nerviosa</a></li>
+                </ul>
+            </li>
+            <li><a href="#contacto">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <div class="video-container">
+        <video autoplay muted loop>
+            <source src="voces.mp4" type="video/mp4">
+            Tu navegador no soporta el elemento video.
+        </video>
+    </div>
+
+    <section class="welcome-section">
+        <div class="welcome-text">
+            Bienvenidos, somos voces internas, aquí aprenderás sobre la salud mental y algunos trastornos mentales como la anorexia nerviosa, la depresión y la ansiedad.
+            <br><br>
+            A continuación encontrarás varios vídeos donde se explica cada trastorno.
+        </div>
+    </section>
+
+    <div class="condition-cards">
+        <div class="condition-card">
+            <a href="depresion.html" class="card-link">
+                <img src="depresion1.png" alt="Depresión" class="card-image">
+                <h2 class="card-title">La Depresión</h2>
+            </a>
+        </div>
+
+        <div class="condition-card">
+            <a href="ansiedad.html" class="card-link">
+                <img src="ansiedad1.png" alt="Ansiedad" class="card-image">
+                <h2 class="card-title">La Ansiedad</h2>
+            </a>
+        </div>
+
+        <div class="condition-card">
+            <a href="anorexia.html" class="card-link">
+                <img src="anorexia1.png" alt="Anorexia Nerviosa" class="card-image">
+                <h2 class="card-title">La Anorexia Nerviosa</h2>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 Voces Internas - Todos los derechos reservados</p>
+        <div class="social-links">
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
+</body>
+</html>
